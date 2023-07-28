@@ -1,4 +1,3 @@
-
 CC      ?= $(CROSS_COMPILE)gcc
 LD      ?= $(CROSS_COMPILE)ld
 AR      ?= $(CROSS_COMPILE)ar
@@ -7,19 +6,24 @@ OBJCOPY ?= $(CROSS_COMPILE)objcopy
 OBJDUMP ?= $(CROSS_COMPILE)objdump
 READELF ?= $(CROSS_COMPILE)readelf
 
-OBJS = main.o
+OBJS = fwu.o
 
 CFLAGS += -Wall -I../ta/include -I./include
-CFLAGS += -I$(TEEC_EXPORT)/include
-LDADD += -lteec -L$(TEEC_EXPORT)/lib
+CFLAGS += -DMACHINE_${MACHINE}
+LDADD += -lteec
 
-BINARY = fwu
+ifneq ($(TEEC_EXPORT),)
+CFLAGS += -I$(TEEC_EXPORT)/include
+LDADD += -L$(TEEC_EXPORT)/lib
+endif
+
+BINARY = rzg_optee_ta_fwu
 
 .PHONY: all
 all: $(BINARY)
 
 $(BINARY): $(OBJS)
-	$(CC) -o $@ $< $(LDADD)
+	$(CC) -o $@ $(OBJS) $(LDADD)
 
 .PHONY: clean
 clean:

@@ -1,48 +1,45 @@
-# RZ/G2 Sample Trusted Applications related to Firmware Update feature
+# README of the RZ/G2 Firmware Update TA
 
 <Div Align="right">
 Renesas Electronics Corporation
 
-Jun-30-2021
+Jul-28-2023
 </Div>
-
-This git contains source code for Trusted Applications(TA) related to Firmware Update feature.\
-Currently the following boards and MPUs are supported:
-
-- Board: EK874 / MPU: R8A774C0 (RZ/G2E)
-- Board: HIHOPE-RZG2M / MPU: R8A774A1 (RZG2M)
-- Board: HIHOPE-RZG2N / MPU: R8A774B1 (RZG2N)
-- Board: HIHOPE-RZG2H / MPU: R8A774E1 (RZG2H)
-
 
 ## 1. Overview
 
+The Firmware Update TA is sample software for Renesas RZ/G2 Group MPUs.
+
+The Firmware Update TA is used to validate received firmware data and
+re-encrypt it using a device-specific key.
+
 ### 1.1. License
 
-- The client applications (`host/*`) are provided under the
-[GPL-2.0](http://opensource.org/licenses/GPL-2.0) license.
-
-- The user TAs (`ta/*`) are provided under the
-[BSD 2-Clause](http://opensource.org/licenses/BSD-2-Clause) license.
-
+See [LICENSE.md](LICENSE.md)
 
 ### 1.2. Notice
 
-The RZ/G Firmware Update TA is distributed as a sample software from Renesas without any warranty or support.
-
+The Firmware Update TA is distributed as a sample software from Renesas
+without any warranty or support.
 
 ### 1.3. Contributing
 
-To contribute to this software, you should email patches to renesas-rz@renesas.com. Please send .patch files as email attachments, not embedded in the email body.
+To contribute to this software, you should email patches to renesas-rz@renesas.com.
+Please send .patch files as email attachments, not embedded in the email body.
 
 ### 1.4. References
 
 The following table shows the document related to this function.
 
-| Number | Issuer  | Title                                                          | Edition           |
-|--------|---------|----------------------------------------------------------------|-------------------|
-| 1      | Renesas | RZ/G2 Trusted Execution Environment Start-Up Guide             | Rev.1.10 or later |
-| 2      | Renesas | RZ/G2 Trusted Execution Environment Porting Guide              | Rev.1.10 or later |
+#### Related Document
+
+| No | Issuer  | Title                                                      | Edition           |
+|----| ------- |------------------------------------------------------------|-------------------|
+| 1  | Renesas | Reference Boards of RZ/G2[H,M,N,E] Security Start-Up Guide | Rev.1.00 or later |
+| 2  | Renesas | RZ/G2 Trusted Execution Environment Porting Guide          | Rev.2.00 or later |
+| 3  | Renesas | Release Note for Verified Linux Package for 64bit kernel   | Rev.1.01 or later |
+| 4  | Renesas | RZ/G2 Yocto recipe Start-Up Guide                          | Rev.1.01 or later |
+| 5  | Renesas | RZ/G2 Reference Boards Start-up Guide                      | Rev.1.01 or later |
 
 ## 2. Operating Environment
 
@@ -50,102 +47,134 @@ The following table shows the document related to this function.
 
 The following table lists the hardware needed to use this utility.
 
-__Hardware environment__
+#### Hardware Environment
 
-| Name         | Note                                        |
+| Name         | Description                                 |
 |--------------|---------------------------------------------|
 | Target board | Hoperun HiHope RZ/G2[M,N,H] platform        |
 |              | Silicon Linux RZ/G2E evaluation kit (EK874) |
+| Host PC      | Ubuntu Desktop 20.04(64bit) or later        |
 
 ### 2.2. Software Environment
 
-The RZ/G Firmware Update TA must be executed on the TEE for RZ/G2 Environment.
+The Firmware Update TA must be executed on the TEE for RZ/G2.
+For building TEE for RZ/G2, refer to [Related Document](#related-document)[1].
 
-For building TEE for RZ/G2 enviroment , refer to References Document 1.
+The following table lists the software required to use this sample software.
+
+#### Software Environment
+
+| Name            | Description                                               |
+|-----------------|-----------------------------------------------------------|
+| Verified Linux  | Linux environment on the evaluation board                 |
+| Yocto SDK *1    | Yocto SDK built from Yocto environment for RZ/G2 Group    |
+| OP-TEE Client   | libteec.so and headers exported by building OP-TEE Client |
+
+*1: Regarding how to get the Yocto SDK, refer to [Related Document](#related-document)[3][4].
 
 ## 3. Software
 
-### 3.1. Software Function
-Trusted Applications related to Firmware Update is used to re-encrypts incoming update firmware data using a device-specific key.
+### 3.1. Function
+
+- Verification and re-encryption of Keyring
+- Verification and re-encryption of Firmware Image
+
+### 3.2. Option setting
+
+The Firmware Update TA support the following build options.
+
+#### 3.2.1. MACHINE
+
+Select from the following table according to the BOARD settings.
+
+| MACHINE          | BOARD setting                                                          |
+| ---------------- | ---------------------------------------------------------------------- |
+| hihope_rzg2h     | Generate binary that works on Hoperun HiHope RZ/G2H platform           |
+| hihope_rzg2m     | Generate binary that works on Hoperun HiHope RZ/G2M platform           |
+| hihope_rzg2n     | Generate binary that works on Hoperun HiHope RZ/G2N platform           |
+| ek874            | Generate binary that works on Silicon Linux RZ/G2E evaluation kit      |
 
 
-### 3.2. Build instructions
-The following is the method to build the sample Firmware Update TA.
+## 4. How to build
 
+This chapter is described how to build the Firmware Update TA.
 
-#### 3.2.1. Build the dependencies
-Then you must build optee_os as well as optee_client first. Build instructions for them can be found on their respective pages.
+### 4.1 Prepare the compiler
 
-Please build TEE for RZ/G2 environment from the beginning, or prepare the necessary SDK from the already built Yocto environment. \
-When building Yocto environment, follow the procedure of the following reference to build Yocto environment.
-Refer to the References Document No.1.
+Get cross compiler for Yocto SDK.
 
-#### 3.2.2. Clone Firmware Update TA
+Yocto SDK:
 
-```bash
-$ git clone https://github.com/renesas-rz/rzg_optee-ta_fwu.git
-$ cd rzg_optee-ta_fwu
-$ git checkout -b v1.00
+```shell
+source /opt/poky/3.1.5/environment-setup-aarch64-poky-linux
 ```
 
-#### 3.2.3. Setting the path for Toolchain (64bit) and environment variable.
+### 4.2. Prepare the source code
 
-```bash
-$ PATH=<SDK>/sysroots/x86_64-pokysdklinux/usr/bin/aarch64-poky-linux:$PATH
-$ source <SDK>/environment-setup-aarch64-poky-linux
+Get the source code of the Firmware Update TA.
+
+```shell
+cd ~/
+git clone https://github.com/renesas-rz/rzg_optee-ta_fwu.git
+cd rzg_optee-ta_fwu
+git checkout rzg2
 ```
 
-#### 3.2.4. Build using GNU Make
-__Host application__
+### 4.3. Build the software
 
-```bash
-$ cd rzg_optee-ta_fwu/host
-$ make \
-    TEEC_EXPORT=<optee_client>/out/export/usr 
-```
-With this you end up with a binary 'fwu' in the host folder where you did the build.
+Yocto SDK:
 
-__Trusted Application__
-```bash
-$ cd rzg_optee-ta_fwu/ta
-$ make \
-    TA_DEV_KIT_DIR=<optee_os>/out/arm/export-ta_arm32
+```shell
+make clean
+make MACHINE=<MACHINE>
 ```
 
-With this you end up with a files named uuid.{ta,elf,dmp,map} etc in the ta folder where you did the build.
-
-### 3.3. How to excute the Applications
-The following is the method to execute Firmware Update TA.
-
-#### 3.3.1. Turn on the board, make sure that linux is started.
+The executable files will be available in the following directory.
+ - Client Application: out/ca
 
 
-#### 3.3.2. Store the executable files (CA and TA).__
+### 5. How to excute
 
-Copy CA\
-Location on the
-environment : $WORK/rzg_optee-ta_fwu/host/ \
-Executable file name : fwu \
-Location on the board : /usr/bin/ \
-Copy the executable file from the build environment to the board. \
-Copy TA \
-Location on the build environment : $WORK/rzg_optee-ta_fwu/ta/ \
-Executable file name : 12f74d4f-175d-4646-aab5bf2617e2c2ca.ta \
-Location on the board : /lib/optee_armtz/ \
-Copy the executable file from the build environment to the board. \
-Note) If optee_armtz directory does not exist, create it.
+This chapter is described how to execute the Firmware Update TA.
 
-#### 3.3.3. Execute CA.__
+#### 5.1. Turn on the board, make sure that linux is started.
 
-```bash
-    $ fwu {update firmware package}
+Start up the Linux environment on the evaluation board.
+For information on how to start, refer to [Related Document](#related-document)[1][5].
+
+#### 5.2. Store the executable files
+
+Copy the executable files to the evaluation board.
+
+#### Client Application
+
+	- Executable files:
+		rzg_optee_ta_fwu
+		rzg_optee_ta_flash
+	- Location on the board:
+		/usr/bin/
+
+#### 5.3. Execute Application.
+
+```shell
+rzg_optee_ta_fwu <-k|-f> <DIR>
+	-k    Keyring Update Session
+	-f    Firmware Update Session
+	<DIR> Directory where the firmware is stored
 ```
 
-Note) The update firmware package was encrypted and packed to FIP format define for RZ/G2 platform. For more informations about preparing to update firmware , refer to References Document 2.
-## 4. Revision history
+Note) The updated firmware image is encrypted. For more informations about preparing \
+to update firmware, refer to [Related Document](#related-document)[2].
 
-Describe the revision history of RZ/G OPTEE-TA FWU.
+## 6. Revision history
 
-### 4.1. v1.00
+Describe the revision history of the Firmware Update TA.
+
+### v1.00
 
 - First release.
+
+### v2.00
+
+- Renewal of RZ/G2 Firmware Update TA.
+  Change the method to run PTA directly from CA to update the firmware.
