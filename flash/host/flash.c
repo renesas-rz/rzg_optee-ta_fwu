@@ -32,7 +32,7 @@
 #include <unistd.h>
 #include <sys/stat.h>
 
-#include <flash_pta.h>
+#include <pta_flash.h>
 #include <tee_client_api.h>
 
 typedef struct {
@@ -177,6 +177,11 @@ static int load_file_data(st_sample_ctx_t *ctx)
 
 	if (stat(ctx->file, &statbuf) != 0) {
 		fprintf(stderr, "Failed to get size: \"%s\"\n", strerror(errno));
+		return -1;
+	}
+
+	if (statbuf.st_size <= 0) {
+		fprintf(stderr, "Invalid file size to load\n");
 		return -1;
 	}
 
