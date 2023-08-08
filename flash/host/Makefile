@@ -9,7 +9,6 @@ READELF ?= $(CROSS_COMPILE)readelf
 OBJS = flash.o
 
 CFLAGS += -Wall -I../ta/include -I./include
-CFLAGS += -DMACHINE_${MACHINE}
 LDADD += -lteec
 
 ifneq ($(TEEC_EXPORT),)
