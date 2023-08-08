@@ -32,7 +32,7 @@
 #include <unistd.h>
 #include <sys/stat.h>
 
-#include <pta_flash.h>
+#include <flash_pta.h>
 #include <tee_client_api.h>
 
 typedef struct {
