@@ -69,22 +69,18 @@ static st_fw_info_t key_info = {
 
 static st_fw_info_t fwu_info[] = {
 #if defined(MACHINE_hihope_rzg2h)
-	{ 0, "bl2-hihope-rzg2h_Enc.bin", "bl2-hihope-rzg2h_fwu.bin" },
 	{ 0, "bl31-hihope-rzg2h_Enc.bin", "bl31-hihope-rzg2h_fwu.bin" },
 	{ 0, "tee-hihope-rzg2h_Enc.bin", "tee-hihope-rzg2h_fwu.bin" },
 	{ 0, "u-boot-hihope-rzg2h_Enc.bin", "u-boot-hihope-rzg2h_fwu.bin" },
 #elif defined(MACHINE_hihope_rzg2m)
-	{ 0, "bl2-hihope-rzg2m_Enc.bin", "bl2-hihope-rzg2m_fwu.bin" },
 	{ 0, "bl31-hihope-rzg2m_Enc.bin", "bl31-hihope-rzg2m_fwu.bin" },
 	{ 0, "tee-hihope-rzg2m_Enc.bin", "tee-hihope-rzg2m_fwu.bin" },
 	{ 0, "u-boot-hihope-rzg2m_Enc.bin", "u-boot-hihope-rzg2m_fwu.bin" },
 #elif defined(MACHINE_hihope_rzg2n)
-	{ 0, "bl2-hihope-rzg2n_Enc.bin", "bl2-hihope-rzg2n_fwu.bin" },
 	{ 0, "bl31-hihope-rzg2n_Enc.bin", "bl31-hihope-rzg2n_fwu.bin" },
 	{ 0, "tee-hihope-rzg2n_Enc.bin", "tee-hihope-rzg2n_fwu.bin" },
 	{ 0, "u-boot-hihope-rzg2n_Enc.bin", "u-boot-hihope-rzg2n_fwu.bin" },
 #elif defined(MACHINE_ek874)
-	{ 0, "bl2-ek874_Enc.bin", "bl2-ek874_fwu.bin" },
 	{ 0, "bl31-ek874_Enc.bin", "bl31-ek874_fwu.bin" },
 	{ 0, "tee-ek874_Enc.bin", "tee-ek874_fwu.bin" },
 	{ 0, "u-boot-ek874_Enc.bin", "u-boot-ek874_fwu.bin" },
